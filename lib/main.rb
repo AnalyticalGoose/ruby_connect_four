@@ -1,11 +1,6 @@
 require 'matrix'
-
 require_relative 'variables.rb'
 include Variables
-
-require_relative 'win.rb'
-include CheckWinConditions
-
 
 class ConnectFour
     attr_reader :board, :column
@@ -19,8 +14,20 @@ class ConnectFour
         @Y_positions = []
     end
 
+    def game_loop
+        draw_board
+        get_selection
+    end
+
     def draw_board
         @board.each { |x| puts x.join(" ") }  
+    end
+
+    def get_selection
+        puts "It's #{@player_turn}'s turn, please choose a column"
+        
+        input = Integer(gets) rescue false
+        input > 0 && input < 8 ? selection(input.to_i) : get_selection
     end
 
     def selection(n)
@@ -36,6 +43,7 @@ class ConnectFour
             @player_turn = "R"
         end
         @column[n] -= 1
+        game_loop
     end
 
     def check_win
@@ -87,35 +95,11 @@ class ConnectFour
     end
 
     def win
+        draw_board
         abort "#{@player_turn} wins!"
     end
 
 end
 
-
-
-
-
-
-
-
 game = ConnectFour.new
-
-game.selection(3)
-game.selection(4)
-game.selection(4)
-game.selection(5)
-game.selection(6)
-
-game.selection(5)
-game.selection(5)
-game.selection(6)
-game.selection(7)
-game.selection(6)
-game.selection(6)
-
-game.draw_board
-
-
-
-#⭗
+# game.game_loop
